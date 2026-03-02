@@ -38,7 +38,7 @@ class WelcomeScreen extends StatelessWidget {
                       ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.1, end: 0, curve: Curves.easeOut),
                       const SizedBox(height: 16),
                       const Text(
-                        'ថ្ងៃពុធ ទី២៨ ខែមករា ឆ្នាំ២០២៦',
+                        'ថ្ងៃសៅរ៍ ទី២០ ខែមីនា ឆ្នាំ២០២៧',
                         style: TextStyle(
                           fontSize: 15,
                           color: AppTheme.textMuted,
@@ -66,7 +66,7 @@ class WelcomeScreen extends StatelessWidget {
                       ).animate().fadeIn(duration: 500.ms, delay: 400.ms),
                       const SizedBox(height: 28),
                       const Text(
-                        'កូនប្រុស xiao zhi  ជាគូនឹង  កូនស្រី xiao mei',
+                        'កូនប្រុស អ៊ាង ចំណាប់  ជាគូនឹង  កូនស្រី សន ណាន្ធីប',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,
@@ -156,7 +156,8 @@ class _OpenInvitationButtonState extends State<_OpenInvitationButton> {
         scale: _pressed ? 0.97 : 1,
         duration: const Duration(milliseconds: 100),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          width: 200,
+          height: 50,
           decoration: BoxDecoration(
             color: AppTheme.deepPurple,
             borderRadius: BorderRadius.circular(14),

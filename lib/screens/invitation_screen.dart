@@ -9,6 +9,7 @@ import '../widgets/animate_when_visible.dart';
 import '../widgets/falling_particles.dart';
 import '../widgets/floral_frame.dart';
 import '../widgets/language_button.dart';
+import '../widgets/location_qr_code.dart';
 import '../widgets/wedding_ticket_card.dart';
 
 /// Screen 2: Full invitation web-app with animation, music, image animation.
@@ -29,7 +30,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
     _WishEntry(name: 'Ramos', message: '新婚快乐 永结同心祝愿', date: '30/12/2025, 16:10'),
     _WishEntry(name: '拉莫斯', message: '愿幸福', date: '30/12/2025, 15:50'),
   ];
-  static final DateTime _eventDate = DateTime(2026, 1, 28, 8, 0);
+  static final DateTime _eventDate = DateTime(2027, 3, 20, 7, 0);
   int _days = 0, _hours = 0, _minutes = 0;
   Timer? _timer;
   bool _muted = true;
@@ -730,13 +731,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
           ),
           child: Column(
             children: [
-              Container(
-                width: 200,
-                height: 200,
-                color: Colors.grey.shade200,
-                alignment: Alignment.center,
-                child: Text('QR Code', style: TextStyle(color: Colors.grey.shade600)),
-              ),
+              const LocationQrCode(size: 200),
               const SizedBox(height: 12),
               const Text(
                 'ស្កែនឬចុចដើម្បីមើលទីតាំង',
@@ -771,7 +766,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
             border: Border.all(color: AppTheme.lavender.withOpacity(0.5)),
           ),
           child: const Text(
-            'ភូមិដើមចារ ឃុំកំពង់ត្រាចខាងលិច\nស្រុកកំពង់ត្រាច ខេត្តកំពត',
+            'ភូមិសំរោងពក ឃុំអូតាប៉ោង\nស្រុកបាកាន ខេត្តពោសាត់',
             style: TextStyle(fontSize: 14, color: AppTheme.textDark, height: 1.4),
           ),
         ),

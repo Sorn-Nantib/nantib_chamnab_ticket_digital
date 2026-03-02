@@ -16,9 +16,9 @@ class _WishesScreenState extends State<WishesScreen> {
   final _nameController = TextEditingController();
   final _messageController = TextEditingController();
   final List<_WishEntry> _wishes = [
-    _WishEntry(name: 'Theshy', message: '恭喜百年!', date: '30/12/2025, 15:50'),
+    _WishEntry(name: 'Theshy', message: '恭喜百年!', date: '20/03/2027, 15:50'),
     _WishEntry(name: 'Ramos', message: '新婚快乐 永结同心祝愿', date: '30/12/2025, 16:10'),
-    _WishEntry(name: '拉莫斯', message: '愿幸福', date: '30/12/2025, 15:50'),
+    _WishEntry(name: '拉莫斯', message: '愿幸福', date: '20/03/2027, 15:50'),
   ];
 
   @override

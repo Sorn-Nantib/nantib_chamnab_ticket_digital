@@ -8,7 +8,7 @@ import '../widgets/floral_frame.dart';
 import '../widgets/language_button.dart';
 import '../widgets/wedding_ticket_card.dart';
 
-/// Single-page web app: Welcome + Program + Wishes + Location in one scroll.
+// Home screen
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -20,11 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
   final _nameController = TextEditingController();
   final _messageController = TextEditingController();
   final List<_WishEntry> _wishes = [
-    _WishEntry(name: 'Theshy', message: '恭喜百年!', date: '30/12/2025, 15:50'),
-    _WishEntry(name: 'Ramos', message: '新婚快乐 永结同心祝愿', date: '30/12/2025, 16:10'),
+    _WishEntry(name: 'Theshy', message: '恭喜百年!', date: '20/03/2027, 15:50'),
+    _WishEntry(name: 'Ramos', message: '新婚快乐 永结同心祝愿', date: '20/03/2027, 16:10'),
     _WishEntry(name: '拉莫斯', message: '愿幸福', date: '30/12/2025, 15:50'),
   ];
-  static final DateTime _eventDate = DateTime(2026, 1, 28, 8, 0);
+  static final DateTime _eventDate = DateTime(2027, 3, 20, 7, 0);
   int _days = 0, _hours = 0, _minutes = 0;
   Timer? _timer;
 
@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
     guestName: 'លោក-ទេពសត្យា',
     eventName: 'សិរីមង្គលអាពាហ៍ពិពាហ៍',
     eventDate: 'ថ្ងៃពុធ ទី២៨ ខែមករា ឆ្នាំ២០២៦',
-    location: 'ភូមិដើមចារ ឃុំកំពង់ត្រាចខាងលិច ស្រុកកំពង់ត្រាច ខេត្តកំពត',
+    location: 'ភូមិសំរោងពក ឃុំអូតាប៉ោង\nស្រុកបាកាន ខេត្តពោសាត់',
     guestsCount: 1,
     tableNumber: '៥',
   );
@@ -429,7 +429,7 @@ class _HomeScreenState extends State<HomeScreen> {
             border: Border.all(color: AppTheme.lavender.withOpacity(0.5)),
           ),
           child: const Text(
-            'ភូមិដើមចារ ឃុំកំពង់ត្រាចខាងលិច\nស្រុកកំពង់ត្រាច ខេត្តកំពត',
+            'ភូមិសំរោងពក ឃុំអូតាប៉ោង\nស្រុកបាកាន ខេត្តពោសាត់',
             style: TextStyle(fontSize: 14, color: AppTheme.textDark, height: 1.4),
           ),
         ),

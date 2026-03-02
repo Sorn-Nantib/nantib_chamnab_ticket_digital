@@ -5,6 +5,7 @@ import '../app_theme.dart';
 import '../widgets/falling_particles.dart';
 import '../widgets/floral_frame.dart';
 import '../widgets/language_button.dart';
+import '../widgets/location_qr_code.dart';
 
 class LocationScreen extends StatefulWidget {
   const LocationScreen({super.key});
@@ -14,7 +15,7 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-  static final DateTime _eventDate = DateTime(2026, 1, 28, 8, 0);
+  static final DateTime _eventDate = DateTime(2027, 3, 20, 7, 0);
   int _days = 0, _hours = 0, _minutes = 0;
   Timer? _timer;
 
@@ -28,19 +29,26 @@ class _LocationScreenState extends State<LocationScreen> {
   void _updateCountdown() {
     final now = DateTime.now();
     if (now.isAfter(_eventDate)) {
-      setState(() {
-        _days = 0;
-        _hours = 0;
-        _minutes = 0;
-      });
+      if (_days != 0 || _hours != 0 || _minutes != 0) {
+        setState(() {
+          _days = 0;
+          _hours = 0;
+          _minutes = 0;
+        });
+      }
       return;
     }
     final diff = _eventDate.difference(now);
-    setState(() {
-      _days = diff.inDays;
-      _hours = diff.inHours % 24;
-      _minutes = diff.inMinutes % 60;
-    });
+    final d = diff.inDays;
+    final h = diff.inHours % 24;
+    final m = diff.inMinutes % 60;
+    if (d != _days || h != _hours || m != _minutes) {
+      setState(() {
+        _days = d;
+        _hours = h;
+        _minutes = m;
+      });
+    }
   }
 
   @override
@@ -97,16 +105,9 @@ class _LocationScreenState extends State<LocationScreen> {
                               ),
                               child: Column(
                                 children: [
-                                  Container(
-                                    width: 200,
-                                    height: 200,
-                                    color: Colors.grey.shade200,
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'QR Code',
-                                      style: TextStyle(color: Colors.grey.shade600),
-                                    ),
-                                  ).animate().fadeIn(duration: 400.ms, delay: 100.ms),
+                                  const LocationQrCode(size: 200)
+                                      .animate()
+                                      .fadeIn(duration: 400.ms, delay: 100.ms),
                                   const SizedBox(height: 12),
                                   const Text(
                                     'ស្កែនឬចុចដើម្បីមើលទីតាំង',
@@ -119,14 +120,14 @@ class _LocationScreenState extends State<LocationScreen> {
                               ),
                             ),
                             const SizedBox(height: 28),
-                            const Text(
-                              'រាប់ថយក្រោយទៅដល់ថ្ងៃកម្មវិធី',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.deepPurple,
-                              ),
-                            ).animate().fadeIn(duration: 400.ms, delay: 200.ms),
+                            // const Text(
+                            //   'រាប់ថយក្រោយទៅដល់ថ្ងៃកម្មវិធី',
+                            //   style: TextStyle(
+                            //     fontSize: 16,
+                            //     fontWeight: FontWeight.w600,
+                            //     color: AppTheme.deepPurple,
+                            //   ),
+                            // ).animate().fadeIn(duration: 400.ms, delay: 200.ms),
                             const SizedBox(height: 16),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -155,7 +156,7 @@ class _LocationScreenState extends State<LocationScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'ភូមិដើមចារ ឃុំកំពង់ត្រាចខាងលិច\nស្រុកកំពង់ត្រាច ខេត្តកំពត',
+                                    'ភូមិសំរោងពក ឃុំអូតាប៉ោង\nស្រុកបាកាន ខេត្តពោសាត់',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: AppTheme.textDark,
