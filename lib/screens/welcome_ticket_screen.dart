@@ -29,9 +29,8 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
   }
 
   void _openTicket() {
-    if (!BackgroundMusic.instance.isMuted) {
-      BackgroundMusic.instance.play();
-    }
+    // Start playing music when user opens the ticket
+    BackgroundMusic.instance.setMuted(false);
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (_, __, ___) => InvitationScreen(guestName: widget.guestName),
@@ -57,6 +56,7 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FloralFrame(
+        backgroundImage: 'assets/images/bg_first.png',
         child: FallingParticles(
           particleCount: 18,
           particleType: ParticleType.petal,
@@ -82,7 +82,7 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
                           .slideY(begin: -0.08, end: 0, curve: Curves.easeOutCubic),
                       const SizedBox(height: 20),
                       _buildMonogram(),
-                      const SizedBox(height: 20),
+                      //  const SizedBox(height: 20),
                       const Text(
                         'សូមគោរពអញ្ជើញ',
                         style: TextStyle(
@@ -113,7 +113,7 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
                 ),
                 Positioned(top: 12, right: 16, child: LanguageButton(onTap: () {})),
                 Positioned(
-                  bottom: 20,
+                  bottom: -800,
                   right: 20,
                   child: _MusicButton(
                     muted: _muted,
@@ -134,23 +134,13 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
   }
 
   Widget _buildMonogram() {
-    return Container(
-      width: 72,
-      height: 72,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: AppTheme.deepPurple.withOpacity(0.08),
-        shape: BoxShape.circle,
-        border: Border.all(color: AppTheme.primaryPurple.withOpacity(0.4), width: 2),
-      ),
-      child: const Text(
-        'M',
-        style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: AppTheme.deepPurple,
-          fontFamily: 'serif',
-        ),
+    return SizedBox(
+      width: 200,
+      height: 200,
+      child: Image.asset(
+        'assets/images/golo.png',
+        width: 200,
+        height: 200,
       ),
     )
         .animate()

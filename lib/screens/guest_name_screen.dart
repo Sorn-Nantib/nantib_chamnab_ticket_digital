@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../app_theme.dart';
 import '../widgets/floral_frame.dart';
 import 'welcome_ticket_screen.dart';
 
-/// First screen: input guest name (ភ្ញៀវ) then go to welcome with that name.
+/// First screen: Admin inputs guest name and copies link to send.
+/// When user opens link with ?guest=Name, they go straight to welcome with that name.
 class GuestNameScreen extends StatefulWidget {
   const GuestNameScreen({super.key});
 
@@ -16,13 +19,61 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
   final _focusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkGuestFromUrl());
+  }
+
+  void _checkGuestFromUrl() {
+    if (!kIsWeb || !mounted) return;
+    final uri = Uri.base;
+    final guest = uri.queryParameters['guest'];
+    if (guest != null && guest.trim().isNotEmpty) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(
+          builder: (_) => WelcomeTicketScreen(guestName: guest.trim()),
+        ),
+      );
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
   }
 
-  void _continueToWelcome() {
+  String _buildInviteLink(String name) {
+    if (name.trim().isEmpty) return '';
+    if (kIsWeb) {
+      final u = Uri.base;
+      final path = u.path.isEmpty ? '/' : u.path;
+      return '${u.origin}$path?guest=${Uri.encodeComponent(name.trim())}';
+    }
+    return '?guest=${Uri.encodeComponent(name.trim())}';
+  }
+
+  Future<void> _copyLink() async {
+    final name = _controller.text.trim();
+    if (name.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('បញ្ចូលឈ្មោះភ្ញៀវជាមុន')),
+        );
+      }
+      return;
+    }
+    final link = _buildInviteLink(name);
+    await Clipboard.setData(ClipboardData(text: link));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('ចម្លងភ្ជាប់រួចរាល់')),
+      );
+    }
+  }
+
+  void _previewWelcome() {
     final name = _controller.text.trim();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
@@ -51,13 +102,25 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                     height: 1.3,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 12),
                 const Text(
-                  'ឈ្មោះភ្ញៀវ',
+                  kIsWeb ? 'វាយឈ្មោះភ្ញៀវ រួចចម្លងភ្ជាប់ផ្ញើជូន' : 'វាយឈ្មោះភ្ញៀវ',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.primaryPurple,
+                    fontSize: 14,
+                    color: AppTheme.textMuted,
+                  ),
+                ),
+                const SizedBox(height: 28),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'ឈ្មោះភ្ញៀវ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.primaryPurple,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -89,22 +152,41 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                     fontWeight: FontWeight.w500,
                     color: AppTheme.textDark,
                   ),
-                  onSubmitted: (_) => _continueToWelcome(),
+                  onSubmitted: (_) => _copyLink(),
                 ),
-                const SizedBox(height: 28),
+                const SizedBox(height: 24),
+                if (kIsWeb) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: _copyLink,
+                      icon: const Icon(Icons.link_rounded, size: 20),
+                      label: const Text('ចម្លងភ្ជាប់ផ្ញើជូនភ្ញៀវ'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppTheme.deepPurple,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
                 SizedBox(
                   width: double.infinity,
-                  child: FilledButton(
-                    onPressed: _continueToWelcome,
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppTheme.deepPurple,
-                      foregroundColor: Colors.white,
+                  child: OutlinedButton(
+                    onPressed: _previewWelcome,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppTheme.deepPurple,
+                      side: const BorderSide(color: AppTheme.primaryPurple),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text('ចាប់ផ្តើម'),
+                    child: const Text('មើលមុន'),
                   ),
                 ),
               ],

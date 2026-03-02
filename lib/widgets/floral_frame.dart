@@ -8,31 +8,36 @@ class FloralFrame extends StatelessWidget {
     super.key,
     required this.child,
     this.inset = 0,
+    this.backgroundImage,
   });
 
   final Widget child;
   final double inset;
 
+  /// Optional background image path (e.g. 'assets/images/bg_first.png'). If null, uses default.
+  final String? backgroundImage;
+
   @override
   Widget build(BuildContext context) {
+    final bg = backgroundImage ?? 'assets/images/Designer.png';
     return Stack(
       fit: StackFit.expand,
       children: [
         Positioned.fill(
           child: Image.asset(
-            'assets/images/Designer.png',
+            bg,
             fit: BoxFit.cover,
             errorBuilder: (_, __, ___) => Container(color: AppTheme.backgroundCream),
           ),
         ),
         child,
-        Positioned.fill(
-          child: IgnorePointer(
-            child: CustomPaint(
-              painter: _FloralBorderPainter(inset: inset),
-            ),
-          ),
-        ),
+        // Positioned.fill(
+        //   child: IgnorePointer(
+        //     child: CustomPaint(
+        //       painter: _FloralBorderPainter(inset: inset),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

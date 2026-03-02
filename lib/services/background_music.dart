@@ -11,7 +11,7 @@ class BackgroundMusic {
   bool _initialized = false;
 
   /// Path relative to pubspec assets (assets/audio/ folder).
-  static const String _assetPath = 'audio/MicrosoftTeams-video copy.mp3';
+  static const String _assetPath = 'audio/NISAI.mp3';
 
   bool get isMuted => _muted;
   bool get isPlaying => _player.state == PlayerState.playing;
