@@ -41,3 +41,31 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Coverage
+coverage/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.env.local
+
+# macOS
+*.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Windows
+ehthumbs.db
+Desktop.ini
+
+# Cursor / editor
+.cursor/
+*.code-workspace
+
+# Generated (uncomment if you use code gen and want to ignore)
+# *.g.dart
+# *.freezed.dart
+# *.mocks.dart
