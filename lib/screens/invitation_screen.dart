@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../app_theme.dart';
 import '../models/wedding_ticket.dart';
@@ -58,8 +59,8 @@ class _InvitationScreenState extends State<InvitationScreen> {
     ticketId: 'WN-2026-0028',
     guestName: 'លោក-ទេពសត្យា',
     eventName: 'សិរីមង្គលអាពាហ៍ពិពាហ៍',
-    eventDate: 'ថ្ងៃពុធ ទី២៨ ខែមករា ឆ្នាំ២០២៦',
-    location: 'ភូមិដើមចារ ឃុំកំពង់ត្រាចខាងលិច ស្រុកកំពង់ត្រាច ខេត្តកំពត',
+    eventDate: 'ថ្ងៃសៅរ៍ ទី២០ ខែមីនា ឆ្នាំ២០២៧',
+    location: 'ភូមិសំរោងពក ឃុំអូតាប៉ោង\nស្រុកបាកាន ខេត្តពោសាត់',
     guestsCount: 1,
     tableNumber: '៥',
   );
@@ -130,6 +131,40 @@ class _InvitationScreenState extends State<InvitationScreen> {
     _nameController.dispose();
     _messageController.dispose();
     super.dispose();
+  }
+
+  /// Opens Google Calendar to add the wedding event (កត់ទុកក្នុងប្រតិទិន).
+  Future<void> _addToCalendar() async {
+    const utcOffsetHours = 7; // Cambodia UTC+7: local 07:00 = UTC 00:00
+    final start = _eventDate;
+    final end = start.add(const Duration(hours: 8));
+    toUtc(DateTime d) => DateTime.utc(d.year, d.month, d.day, d.hour, d.minute, d.second)
+        .subtract(const Duration(hours: utcOffsetHours));
+    formatUtc(DateTime d) {
+      final u = toUtc(d);
+      final y = u.year;
+      final m = u.month.toString().padLeft(2, '0');
+      final day = u.day.toString().padLeft(2, '0');
+      final h = u.hour.toString().padLeft(2, '0');
+      final min = u.minute.toString().padLeft(2, '0');
+      final s = u.second.toString().padLeft(2, '0');
+      return '$y$m${day}T$h$min${s}Z';
+    }
+
+    final title = Uri.encodeComponent('សិរីមង្គលអាពាហ៍ពិពាហ៍');
+    final location = Uri.encodeComponent('ភូមិសំរោងពក ឃុំអូតាប៉ោង ស្រុកបាកាន ខេត្តពោសាត់');
+    final details = Uri.encodeComponent('ពិធីអាពាហ៍ពិពាហ៍');
+    final dates = '${formatUtc(start)}/${formatUtc(end)}';
+    final url = Uri.parse(
+      'https://calendar.google.com/calendar/render?action=TEMPLATE'
+      '&text=$title'
+      '&dates=$dates'
+      '&details=$details'
+      '&location=$location',
+    );
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
   }
 
   void _sendWish() {
@@ -320,7 +355,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '• លនឹងប្រព្រឹត្តទៅ.\nទី២៨ ខែមករា ឆ្នាំ២០២៦\nស្ថិតនៅគេហដ្ឋានខាងស្រី ភូមិដើមចារ\nកំពង់ត្រាចខាងលិច ស្រុក កំពង់ត្រាច ខេត្តកំពត',
+          '• ដែលនឹងប្រព្រឹត្តទៅ.\nថ្ងៃសៅរ៍ ទី២០ ខែមីនា ឆ្នាំ២០២៧,\nស្ថិតនៅគេហដ្ឋានខាងស្រី ភូមិសំរោងពក ឃុំអូតាប៉ោង\nស្រុកបាកាន ខេត្តពោសាត់',
           style: TextStyle(fontSize: 13, color: AppTheme.textDark, height: 1.5),
         )
             .animate()
@@ -330,7 +365,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
         Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {},
+            onTap: _addToCalendar,
             borderRadius: BorderRadius.circular(14),
             child: Container(
               width: double.infinity,
@@ -729,11 +764,11 @@ class _InvitationScreenState extends State<InvitationScreen> {
               ),
             ],
           ),
-          child: Column(
+          child: const Column(
             children: [
-              const LocationQrCode(size: 200),
-              const SizedBox(height: 12),
-              const Text(
+              LocationQrCode(size: 200),
+              SizedBox(height: 12),
+              Text(
                 'ស្កែនឬចុចដើម្បីមើលទីតាំង',
                 style: TextStyle(fontSize: 13, color: AppTheme.textMuted),
               ),

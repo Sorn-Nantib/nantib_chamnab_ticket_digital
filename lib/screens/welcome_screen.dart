@@ -47,7 +47,7 @@ class WelcomeScreen extends StatelessWidget {
                       ).animate().fadeIn(duration: 500.ms, delay: 200.ms),
                       const SizedBox(height: 24),
                       const Text(
-                        'លោក Yong Xing  និង អ្នកស្រី Xiao Ping\nលោក វ៉ាន់ សាវុធ និង អ្នកស្រី យ៉េង គា',
+                        'លោក អ៊ុត នាង និង អ្នកស្រី យិន ស៊ិ\nលោក សន សល់ និង អ្នកស្រី ហឿន គុន្ធី',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
@@ -76,7 +76,7 @@ class WelcomeScreen extends StatelessWidget {
                       ).animate().fadeIn(duration: 500.ms, delay: 500.ms),
                       const SizedBox(height: 20),
                       const Text(
-                        'ដែលនឹងប្រព្រឹត្តទៅនៅ\nភូមិដើមចារ ឃុំកំពង់ត្រាចខាងលិច',
+                        'ដែលនឹងប្រព្រឹត្តទៅនៅ\nភូមិសំរោងពក ឃុំអូតាប៉ោង\nស្រុកបាកាន ខេត្តពោសាត់',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 13,

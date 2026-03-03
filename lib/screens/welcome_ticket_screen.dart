@@ -99,9 +99,10 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
                       Text(
                         widget.guestName != null && widget.guestName!.isNotEmpty ? widget.guestName! : 'លោក-ទេពសត្យា',
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           color: AppTheme.textDark,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Battambang, Moul',
                         ),
                       ).animate().fadeIn(duration: 480.ms, delay: 220.ms, curve: Curves.easeOutCubic),
                       const SizedBox(height: 32),
