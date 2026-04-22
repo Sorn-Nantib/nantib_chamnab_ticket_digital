@@ -294,57 +294,76 @@ class _InvitationScreenState extends State<InvitationScreen> {
     );
   }
 
+  static const String _bannerAsset = 'assets/images/Screenshot 2026-02-26 at 3.02.47 in the afternoon.png';
+
+  void _openImageViewer(BuildContext context, String imageAsset) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierColor: Colors.black87,
+        pageBuilder: (_, __, ___) => _FullScreenImageView(asset: imageAsset),
+        transitionsBuilder: (_, animation, __, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        transitionDuration: const Duration(milliseconds: 200),
+      ),
+    );
+  }
+
   Widget _buildBannerImage() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: SizedBox(
-        height: 200,
-        width: double.infinity,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset(
-              'assets/images/Screenshot 2026-02-26 at 3.02.47 in the afternoon.png',
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppTheme.primaryPurple.withOpacity(0.2),
-                      AppTheme.lavender.withOpacity(0.4),
-                    ],
+    return GestureDetector(
+      onTap: () => _openImageViewer(context, _bannerAsset),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: SizedBox(
+          height: 200,
+          width: double.infinity,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                _bannerAsset,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        AppTheme.primaryPurple.withOpacity(0.2),
+                        AppTheme.lavender.withOpacity(0.4),
+                      ],
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.photo_camera_rounded,
-                    size: 64,
-                    color: AppTheme.primaryPurple.withOpacity(0.5),
-                  ),
-                ),
-              ),
-            ),
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black.withOpacity(0.2)],
+                  child: Center(
+                    child: Icon(
+                      Icons.photo_camera_rounded,
+                      size: 64,
+                      color: AppTheme.primaryPurple.withOpacity(0.5),
+                    ),
                   ),
                 ),
               ),
-            ),
-            const Positioned.fill(
-              child: FallingParticles(
-                particleCount: 16,
-                particleType: ParticleType.petal,
-                child: SizedBox.expand(),
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black.withOpacity(0.2)],
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ],
+              const Positioned.fill(
+                child: FallingParticles(
+                  particleCount: 16,
+                  particleType: ParticleType.petal,
+                  child: SizedBox.expand(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -676,7 +695,13 @@ class _InvitationScreenState extends State<InvitationScreen> {
   }
 
   Widget _buildGalleryImageCard(String? asset, int delayMs, double height, {bool isBig = false}) {
-    final content = _buildGalleryCardContent(asset: asset, height: height, isBig: isBig, placeholderDelayMs: delayMs);
+    final content = _buildGalleryCardContent(
+      context,
+      asset: asset,
+      height: height,
+      isBig: isBig,
+      placeholderDelayMs: delayMs,
+    );
     return content
         .animate()
         .fadeIn(duration: 440.ms, delay: delayMs.ms, curve: Curves.easeOutCubic)
@@ -691,7 +716,13 @@ class _InvitationScreenState extends State<InvitationScreen> {
 
   /// List image: animates when user scrolls and the item meets the viewport.
   Widget _buildGalleryListImageCard(String asset, double height, {required bool visible}) {
-    final content = _buildGalleryCardContent(asset: asset, height: height, isBig: false, placeholderDelayMs: 0);
+    final content = _buildGalleryCardContent(
+      context,
+      asset: asset,
+      height: height,
+      isBig: false,
+      placeholderDelayMs: 0,
+    );
     if (!visible) {
       return Opacity(opacity: 0, child: content);
     }
@@ -702,13 +733,14 @@ class _InvitationScreenState extends State<InvitationScreen> {
         .scale(begin: const Offset(0.94, 0.94), end: const Offset(1, 1), duration: 420.ms, curve: Curves.easeOutCubic);
   }
 
-  Widget _buildGalleryCardContent({
+  Widget _buildGalleryCardContent(
+    BuildContext context, {
     required String? asset,
     required double height,
     required bool isBig,
     required int placeholderDelayMs,
   }) {
-    return ClipRRect(
+    final child = ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: SizedBox(
         height: height,
@@ -734,6 +766,13 @@ class _InvitationScreenState extends State<InvitationScreen> {
             : _buildGalleryPlaceholder(animationDelayMs: placeholderDelayMs),
       ),
     );
+    if (asset != null) {
+      return GestureDetector(
+        onTap: () => _openImageViewer(context, asset),
+        child: child,
+      );
+    }
+    return child;
   }
 
   Widget _buildLocationSection() {
@@ -842,6 +881,48 @@ class _MusicButton extends StatelessWidget {
             color: Colors.white,
             size: 24,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FullScreenImageView extends StatelessWidget {
+  const _FullScreenImageView({required this.asset});
+  final String asset;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pop(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Center(
+              child: InteractiveViewer(
+                minScale: 0.5,
+                maxScale: 4,
+                child: Image.asset(
+                  asset,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) => const Center(
+                    child: Icon(Icons.broken_image_rounded, size: 64, color: Colors.white54),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 8,
+              left: 16,
+              child: IconButton(
+                icon: const Icon(Icons.close_rounded, color: Colors.white, size: 28),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ],
         ),
       ),
     );

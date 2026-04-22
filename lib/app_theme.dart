@@ -19,6 +19,9 @@ class AppTheme {
   static const Color petalPink = Color(0xFFE8B4C4);
   static const Color heartPink = Color(0xFFF0C0D0);
 
+  /// Lighter purple for names / script text (invitation-style)
+  static const Color namePurple = Color(0xFF7B6B9E);
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,

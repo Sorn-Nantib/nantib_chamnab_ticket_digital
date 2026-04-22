@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../app_theme.dart';
 import '../services/background_music.dart';
 import '../widgets/falling_particles.dart';
@@ -7,7 +8,6 @@ import '../widgets/floral_frame.dart';
 import '../widgets/language_button.dart';
 import 'invitation_screen.dart';
 
-/// Screen 1: Welcome with "Open ticket" button; shows guest name (ភ្ញៀវ) when provided.
 class WelcomeTicketScreen extends StatefulWidget {
   const WelcomeTicketScreen({super.key, this.guestName});
 
@@ -64,14 +64,14 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
             child: Stack(
               children: [
                 SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(24, 48, 24, 100),
+                  padding: const EdgeInsets.fromLTRB(24, 48, 24, 130),
                   child: Column(
                     children: [
-                      const Text(
-                        'សិរីមង្គលអាពាហ៍ពិពាហ៍',
+                      Text(
+                        'សូមស្វាគមន៍មកកាន់ពិធីមង្គល',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 26,
+                        style: GoogleFonts.moul(
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: AppTheme.deepPurple,
                           height: 1.3,
@@ -82,13 +82,13 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
                           .slideY(begin: -0.08, end: 0, curve: Curves.easeOutCubic),
                       const SizedBox(height: 20),
                       _buildMonogram(),
-                      //  const SizedBox(height: 20),
-                      const Text(
+                      const SizedBox(height: 12),
+                      Text(
                         'សូមគោរពអញ្ជើញ',
-                        style: TextStyle(
+                        style: GoogleFonts.moul(
                           fontSize: 17,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.primaryPurple,
+                          color: AppTheme.deepPurple,
                         ),
                       ).animate().fadeIn(duration: 480.ms, delay: 140.ms, curve: Curves.easeOutCubic).scale(
                           begin: const Offset(0.96, 0.96),
@@ -97,24 +97,30 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
                           delay: 140.ms),
                       const SizedBox(height: 8),
                       Text(
-                        widget.guestName != null && widget.guestName!.isNotEmpty ? widget.guestName! : 'លោក-ទេពសត្យា',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: AppTheme.textDark,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Battambang, Moul',
+                        widget.guestName != null && widget.guestName!.isNotEmpty ? widget.guestName! : 'លោក-លោកស្រី',
+                        style: GoogleFonts.hanuman(
+                          fontSize: 19,
+                          color: AppTheme.namePurple,
+                          fontWeight: FontWeight.w600,
                         ),
                       ).animate().fadeIn(duration: 480.ms, delay: 220.ms, curve: Curves.easeOutCubic),
-                      const SizedBox(height: 32),
-                      _buildCoupleIllustration(),
-                      const SizedBox(height: 36),
-                      _buildOpenTicketButton(),
+
+                      Container(
+                        height: 140,
+                      )
+                      //  _buildCoupleIllustration(),
                     ],
                   ),
                 ),
+                Positioned(
+                  left: 24,
+                  right: 24,
+                  bottom: -10,
+                  child: _buildOpenTicketButton(),
+                ),
                 Positioned(top: 12, right: 16, child: LanguageButton(onTap: () {})),
                 Positioned(
-                  bottom: -800,
+                  bottom: 12,
                   right: 20,
                   child: _MusicButton(
                     muted: _muted,
@@ -189,8 +195,8 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
         onTap: _openTicket,
         borderRadius: BorderRadius.circular(14),
         child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 18),
+          height: 50,
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           decoration: BoxDecoration(
             color: AppTheme.deepPurple,
             borderRadius: BorderRadius.circular(14),
@@ -203,12 +209,12 @@ class _WelcomeTicketScreenState extends State<WelcomeTicketScreen> {
             ],
           ),
           alignment: Alignment.center,
-          child: const Text(
-            'បើកធៀប',
-            style: TextStyle(
+          child: Text(
+            'បើកសំបុត្រ',
+            style: GoogleFonts.battambang(
               color: Colors.white,
               fontSize: 18,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
