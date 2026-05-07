@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:math' as math;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../app_theme.dart';
@@ -12,6 +15,7 @@ import '../widgets/floral_frame.dart';
 import '../widgets/language_button.dart';
 import '../widgets/location_qr_code.dart';
 import '../widgets/wedding_ticket_card.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Screen 2: Full invitation web-app with animation, music, image animation.
 class InvitationScreen extends StatefulWidget {
@@ -40,6 +44,9 @@ class _InvitationScreenState extends State<InvitationScreen> {
   final Map<String, Timer> _exitTimers = {};
   final Set<int> _galleryListVisibleIndices = {};
   static const int _exitDurationMs = 320;
+
+  /// On web/desktop wide windows the invitation reads best at phone-like width.
+  static const double _maxInvitationContentWidth = 430;
 
   static const List<_TimelineEvent> _events = [
     _TimelineEvent(time: 'ម៉ោង ០៦:៣០ នាទីព្រឹក', label: 'ជួបជុំភ្ញៀវកិត្តិយសរៀបចំហែជំនួន', icon: Icons.people_rounded),
@@ -185,116 +192,153 @@ class _InvitationScreenState extends State<InvitationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FloralFrame(
-        child: FallingParticles(
-          particleCount: 24,
-          particleType: ParticleType.heart,
-          child: SafeArea(
-            child: Stack(
-              children: [
-                SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(24, 56, 24, 80),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      AnimateWhenVisible(
-                        sectionKey: 'banner',
-                        visible: _visibleSections.contains('banner'),
-                        exiting: _exitingSections.contains('banner'),
-                        onVisible: () => _onSectionVisible('banner'),
-                        onNotVisible: () => _onSectionNotVisible('banner'),
-                        child: _buildBannerImage(),
-                      ),
-                      const SizedBox(height: 32),
-                      AnimateWhenVisible(
-                        sectionKey: 'event',
-                        visible: _visibleSections.contains('event'),
-                        exiting: _exitingSections.contains('event'),
-                        onVisible: () => _onSectionVisible('event'),
-                        onNotVisible: () => _onSectionNotVisible('event'),
-                        child: _buildEventInfoAndCalendar(),
-                      ),
-                      const SizedBox(height: 40),
-                      AnimateWhenVisible(
-                        sectionKey: 'program',
-                        visible: _visibleSections.contains('program'),
-                        exiting: _exitingSections.contains('program'),
-                        onVisible: () => _onSectionVisible('program'),
-                        onNotVisible: () => _onSectionNotVisible('program'),
-                        child: _buildProgramTitleAndTimeline(),
-                      ),
-                      const SizedBox(height: 40),
-                      AnimateWhenVisible(
-                        sectionKey: 'ticket',
-                        visible: _visibleSections.contains('ticket'),
-                        exiting: _exitingSections.contains('ticket'),
-                        onVisible: () => _onSectionVisible('ticket'),
-                        onNotVisible: () => _onSectionNotVisible('ticket'),
-                        child: _buildTicketSection(),
-                      ),
-                      const SizedBox(height: 40),
-                      AnimateWhenVisible(
-                        sectionKey: 'wishes',
-                        visible: _visibleSections.contains('wishes'),
-                        exiting: _exitingSections.contains('wishes'),
-                        onVisible: () => _onSectionVisible('wishes'),
-                        onNotVisible: () => _onSectionNotVisible('wishes'),
-                        child: _buildWishesSection(),
-                      ),
-                      const SizedBox(height: 40),
-                      AnimateWhenVisible(
-                        sectionKey: 'gallery',
-                        visible: _visibleSections.contains('gallery'),
-                        exiting: _exitingSections.contains('gallery'),
-                        onVisible: () => _onSectionVisible('gallery'),
-                        onNotVisible: () => _onSectionNotVisible('gallery'),
-                        child: _buildGallerySection(),
-                      ),
-                      const SizedBox(height: 40),
-                      AnimateWhenVisible(
-                        sectionKey: 'location',
-                        visible: _visibleSections.contains('location'),
-                        exiting: _exitingSections.contains('location'),
-                        onVisible: () => _onSectionVisible('location'),
-                        onNotVisible: () => _onSectionNotVisible('location'),
-                        child: _buildLocationSection(),
-                      ),
-                    ],
-                  ),
+    final media = MediaQuery.sizeOf(context);
+    final narrowColumn = kIsWeb || media.width > _maxInvitationContentWidth;
+
+    Widget invitationStack() {
+      return FallingParticles(
+        particleCount: 24,
+        particleType: ParticleType.heart,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  24,
+                  narrowColumn ? 48 : 56,
+                  24,
+                  narrowColumn ? 72 : 80,
                 ),
-                Positioned(top: 12, right: 16, child: LanguageButton(onTap: () {})),
-                Positioned(
-                  bottom: 20,
-                  right: 20,
-                  child: _MusicButton(
-                    muted: _muted,
-                    onTap: () {
-                      setState(() {
-                        _muted = !_muted;
-                        BackgroundMusic.instance.setMuted(_muted);
-                      });
-                    },
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AnimateWhenVisible(
+                      sectionKey: 'banner',
+                      visible: _visibleSections.contains('banner'),
+                      exiting: _exitingSections.contains('banner'),
+                      onVisible: () => _onSectionVisible('banner'),
+                      onNotVisible: () => _onSectionNotVisible('banner'),
+                      child: _buildBannerImage(),
+                    ),
+                    // AnimateWhenVisible(
+                    //   sectionKey: 'banner',
+                    //   visible: _visibleSections.contains('banner'),
+                    //   exiting: _exitingSections.contains('banner'),
+                    //   onVisible: () => _onSectionVisible('banner'),
+                    //   onNotVisible: () => _onSectionNotVisible('banner'),
+                    //   child: _nameGroup(),
+                    // ),
+                    const SizedBox(height: 32),
+                    AnimateWhenVisible(
+                      sectionKey: 'event',
+                      visible: _visibleSections.contains('event'),
+                      exiting: _exitingSections.contains('event'),
+                      onVisible: () => _onSectionVisible('event'),
+                      onNotVisible: () => _onSectionNotVisible('event'),
+                      child: _buildEventInfoAndCalendar(),
+                    ),
+                    const SizedBox(height: 40),
+                    AnimateWhenVisible(
+                      sectionKey: 'program',
+                      visible: _visibleSections.contains('program'),
+                      exiting: _exitingSections.contains('program'),
+                      onVisible: () => _onSectionVisible('program'),
+                      onNotVisible: () => _onSectionNotVisible('program'),
+                      child: _buildProgramTitleAndTimeline(),
+                    ),
+                    const SizedBox(height: 40),
+                    AnimateWhenVisible(
+                      sectionKey: 'ticket',
+                      visible: _visibleSections.contains('ticket'),
+                      exiting: _exitingSections.contains('ticket'),
+                      onVisible: () => _onSectionVisible('ticket'),
+                      onNotVisible: () => _onSectionNotVisible('ticket'),
+                      child: _buildTicketSection(),
+                    ),
+                    const SizedBox(height: 40),
+                    AnimateWhenVisible(
+                      sectionKey: 'wishes',
+                      visible: _visibleSections.contains('wishes'),
+                      exiting: _exitingSections.contains('wishes'),
+                      onVisible: () => _onSectionVisible('wishes'),
+                      onNotVisible: () => _onSectionNotVisible('wishes'),
+                      child: _buildWishesSection(),
+                    ),
+                    const SizedBox(height: 40),
+                    AnimateWhenVisible(
+                      sectionKey: 'gallery',
+                      visible: _visibleSections.contains('gallery'),
+                      exiting: _exitingSections.contains('gallery'),
+                      onVisible: () => _onSectionVisible('gallery'),
+                      onNotVisible: () => _onSectionNotVisible('gallery'),
+                      child: _buildGallerySection(),
+                    ),
+                    const SizedBox(height: 40),
+                    AnimateWhenVisible(
+                      sectionKey: 'location',
+                      visible: _visibleSections.contains('location'),
+                      exiting: _exitingSections.contains('location'),
+                      onVisible: () => _onSectionVisible('location'),
+                      onNotVisible: () => _onSectionNotVisible('location'),
+                      child: _buildLocationSection(),
+                    ),
+                  ],
                 ),
-                Positioned(
-                  top: 12,
-                  left: 8,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_rounded),
-                    onPressed: () => Navigator.of(context).pop(),
-                    color: AppTheme.deepPurple,
-                  ),
+              ),
+              Positioned(top: 12, right: 16, child: LanguageButton(onTap: () {})),
+              Positioned(
+                bottom: 20,
+                right: 20,
+                child: _MusicButton(
+                  muted: _muted,
+                  onTap: () {
+                    setState(() {
+                      _muted = !_muted;
+                      BackgroundMusic.instance.setMuted(_muted);
+                    });
+                  },
                 ),
-              ],
-            ),
+              ),
+              Positioned(
+                top: 12,
+                left: 8,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  onPressed: () => Navigator.of(context).pop(),
+                  color: AppTheme.deepPurple,
+                ),
+              ),
+            ],
           ),
         ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundCream,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (!narrowColumn) {
+            return FloralFrame(child: invitationStack());
+          }
+          return Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: math.min(constraints.maxWidth, _maxInvitationContentWidth),
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                height: constraints.maxHeight,
+                child: FloralFrame(child: invitationStack()),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  static const String _bannerAsset = 'assets/images/Screenshot 2026-02-26 at 3.02.47 in the afternoon.png';
+  static const String _bannerAsset = 'assets/images/khmer_text_color_6B4E9E 1.svg';
 
   void _openImageViewer(BuildContext context, String imageAsset) {
     Navigator.of(context).push(
@@ -312,67 +356,41 @@ class _InvitationScreenState extends State<InvitationScreen> {
 
   Widget _buildBannerImage() {
     return GestureDetector(
-      onTap: () => _openImageViewer(context, _bannerAsset),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: SizedBox(
-          height: 200,
-          width: double.infinity,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.asset(
-                _bannerAsset,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppTheme.primaryPurple.withOpacity(0.2),
-                        AppTheme.lavender.withOpacity(0.4),
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.photo_camera_rounded,
-                      size: 64,
-                      color: AppTheme.primaryPurple.withOpacity(0.5),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Colors.transparent, Colors.black.withOpacity(0.2)],
-                    ),
-                  ),
-                ),
-              ),
-              const Positioned.fill(
-                child: FallingParticles(
-                  particleCount: 16,
-                  particleType: ParticleType.petal,
-                  child: SizedBox.expand(),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+        onTap: () => _openImageViewer(context, _bannerAsset),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+          child: Image.asset(
+            'assets/images/khmer_text_color_6B4E9E 1.png',
+            fit: BoxFit.cover,
+          ).animate().fadeIn(duration: 50.ms, delay: 100.ms, curve: Curves.easeOutCubic).scale(
+              begin: const Offset(0.92, 0.92),
+              end: const Offset(1, 1),
+              duration: 400.ms,
+              delay: 50.ms,
+              curve: Curves.easeOutCubic),
+        ));
   }
 
   Widget _buildEventInfoAndCalendar() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          customName('អ៊ុត នាង', 'យិន ស៊ិ'),
+          const SizedBox(width: 20),
+          customName('សន សល់', 'ហឿន គុន្ធី'),
+        ])
+            .animate()
+            .fadeIn(duration: 440.ms, curve: Curves.easeOutCubic)
+            .slideX(begin: -0.02, end: 0, curve: Curves.easeOutCubic),
+        // const Text(
+        //   '• ដែលនឹងប្រព្រឹត្តទៅ.\nថ្ងៃសៅរ៍ ទី២០ ខែមីនា ឆ្នាំ២០២៧,\nស្ថិតនៅគេហដ្ឋានខាងស្រី ភូមិសំរោងពក ឃុំអូតាប៉ោង\nស្រុកបាកាន ខេត្តពោសាត់',
+        //   style: TextStyle(fontSize: 13, color: AppTheme.textDark, height: 1.5),
+        // )ឝ
+        //     .animate()
+        //     .fadeIn(duration: 440.ms, curve: Curves.easeOutCubic)
+        //     .slideX(begin: -0.02, end: 0, curve: Curves.easeOutCubic),
+        const SizedBox(height: 20),
         const Text(
           '• ដែលនឹងប្រព្រឹត្តទៅ.\nថ្ងៃសៅរ៍ ទី២០ ខែមីនា ឆ្នាំ២០២៧,\nស្ថិតនៅគេហដ្ឋានខាងស្រី ភូមិសំរោងពក ឃុំអូតាប៉ោង\nស្រុកបាកាន ខេត្តពោសាត់',
           style: TextStyle(fontSize: 13, color: AppTheme.textDark, height: 1.5),
@@ -429,7 +447,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
       children: [
         const Text(
           'កម្មវិធីសិរីមង្គលអាពាហ៍ពិពាហ៍',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.deepPurple),
+          style: TextStyle(fontSize: 34, fontWeight: FontWeight.w700, color: AppTheme.primaryPurple),
         )
             .animate()
             .fadeIn(duration: 440.ms, curve: Curves.easeOutCubic)
@@ -452,6 +470,52 @@ class _InvitationScreenState extends State<InvitationScreen> {
         }),
       ],
     );
+  }
+
+  Widget customName(String fatherName, String motherName) {
+    return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+      Text.rich(TextSpan(children: [
+        TextSpan(
+          text: 'លោក ',
+          style: GoogleFonts.battambang(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.namePurple,
+            height: 1.3,
+          ),
+        ),
+        TextSpan(
+          text: fatherName,
+          style: GoogleFonts.moul(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.namePurple,
+            height: 1.3,
+          ),
+        )
+      ])),
+      const SizedBox(height: 10),
+      Text.rich(TextSpan(children: [
+        TextSpan(
+          text: 'លោកស្រី ',
+          style: GoogleFonts.battambang(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.namePurple,
+            height: 1.3,
+          ),
+        ),
+        TextSpan(
+          text: motherName,
+          style: GoogleFonts.moul(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.namePurple,
+            height: 1.3,
+          ),
+        )
+      ])),
+    ]);
   }
 
   Widget _buildTicketSection() {
@@ -905,13 +969,18 @@ class _FullScreenImageView extends StatelessWidget {
               child: InteractiveViewer(
                 minScale: 0.5,
                 maxScale: 4,
-                child: Image.asset(
-                  asset,
-                  fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) => const Center(
-                    child: Icon(Icons.broken_image_rounded, size: 64, color: Colors.white54),
-                  ),
-                ),
+                child: asset.toLowerCase().endsWith('.svg')
+                    ? SvgPicture.asset(
+                        asset,
+                        fit: BoxFit.contain,
+                      )
+                    : Image.asset(
+                        asset,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Center(
+                          child: Icon(Icons.broken_image_rounded, size: 64, color: Colors.white54),
+                        ),
+                      ),
               ),
             ),
             Positioned(
