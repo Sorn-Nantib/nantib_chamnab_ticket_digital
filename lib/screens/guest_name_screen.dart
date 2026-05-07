@@ -77,7 +77,8 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
     final name = _controller.text.trim();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
-        builder: (_) => WelcomeTicketScreen(guestName: name.isEmpty ? null : name),
+        builder: (_) =>
+            WelcomeTicketScreen(guestName: name.isEmpty ? null : name),
       ),
     );
   }
@@ -100,16 +101,20 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                     fontWeight: FontWeight.bold,
                     color: AppTheme.deepPurple,
                     height: 1.3,
+                    fontFamily: 'KHMEROSMUOLLIGHT',
                   ),
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  kIsWeb ? 'វាយឈ្មោះភ្ញៀវ រួចចម្លងភ្ជាប់ផ្ញើជូន' : 'វាយឈ្មោះភ្ញៀវ',
+                  kIsWeb
+                      ? 'វាយឈ្មោះភ្ញៀវ រួចចម្លងភ្ជាប់ផ្ញើជូន'
+                      : 'វាយឈ្មោះភ្ញៀវ',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 14,
-                    color: AppTheme.textMuted,
-                  ),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.textMuted,
+                      fontFamily: 'KHMEROSSIEMREAP'),
                 ),
                 const SizedBox(height: 28),
                 const Align(
@@ -117,10 +122,15 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                   child: Text(
                     'ឈ្មោះភ្ញៀវ',
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.primaryPurple,
-                    ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.primaryPurple,
+                        shadows: [
+                          Shadow(
+                              color: AppTheme.deepPurple,
+                              offset: Offset(-0.5, -0.5))
+                        ],
+                        fontFamily: 'KHMEROSSIEMREAP'),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -130,31 +140,39 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
                     hintText: 'បញ្ចូលឈ្មោះភ្ញៀវ',
-                    hintStyle: TextStyle(color: AppTheme.textMuted.withOpacity(0.8)),
+                    hintStyle: const TextStyle(
+                      color: AppTheme.textMuted,
+                      fontFamily: 'KHMEROSSIEMREAP',
+                    ),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppTheme.lightLavender),
+                      borderSide:
+                          const BorderSide(color: AppTheme.lightLavender),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppTheme.primaryPurple.withOpacity(0.4)),
+                      borderSide: BorderSide(
+                          color: AppTheme.primaryPurple.withOpacity(0.4)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppTheme.primaryPurple, width: 2),
+                      borderSide: const BorderSide(
+                          color: AppTheme.primaryPurple, width: 2),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 20),
                   ),
                   style: const TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: AppTheme.textDark,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.deepPurple,
+                    fontFamily: 'KHMEROSMUOLLIGHT',
                   ),
                   onSubmitted: (_) => _copyLink(),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 50),
                 if (kIsWeb) ...[
                   SizedBox(
                     width: double.infinity,
@@ -172,7 +190,7 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 30),
                 ],
                 SizedBox(
                   width: double.infinity,
@@ -186,7 +204,15 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text('មើលមុន'),
+                    child: const Text(
+                      'មើលមុន',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.deepPurple,
+                        fontFamily: 'KHMEROSSEAMREAP',
+                      ),
+                    ),
                   ),
                 ),
               ],
