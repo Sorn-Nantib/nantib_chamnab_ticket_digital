@@ -11,6 +11,10 @@ class AppTheme {
   static const Color textDark = Color(0xFF2D2438);
   static const Color textMuted = Color(0xFF6B5B7A);
 
+  ///// gold color
+  static const Color goldColor2 = Color(0xFFC9981D);
+  static const Color goldColor = Color(0xFFDB8933);
+
   /// Alias for textDark (for ticket/legacy screens).
   static const Color textPrimary = textDark;
 

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +17,9 @@ class GuestNameScreen extends StatefulWidget {
 }
 
 class _GuestNameScreenState extends State<GuestNameScreen> {
+  /// Matches welcome / invitation screens on web and wide layouts.
+  static const double _maxContentWidth = 430;
+
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
 
@@ -77,148 +82,164 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
     final name = _controller.text.trim();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
-        builder: (_) =>
-            WelcomeTicketScreen(guestName: name.isEmpty ? null : name),
+        builder: (_) => WelcomeTicketScreen(guestName: name.isEmpty ? null : name),
+      ),
+    );
+  }
+
+  Widget _buildGuestNameContent() {
+    return FloralFrame(
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 100),
+              const Text(
+                'សិរីមង្គលអាពាហ៍ពិពាហ៍',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.deepPurple,
+                  height: 1.3,
+                  fontFamily: 'KHMEROSMUOLLIGHT',
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                kIsWeb ? 'វាយឈ្មោះភ្ញៀវ រួចចម្លងភ្ជាប់ផ្ញើជូន' : 'វាយឈ្មោះភ្ញៀវ',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.textMuted,
+                    fontFamily: 'KHMEROSSIEMREAP'),
+              ),
+              const SizedBox(height: 100),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'ឈ្មោះភ្ញៀវ',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.primaryPurple,
+                      shadows: [Shadow(color: AppTheme.deepPurple, offset: Offset(-0.5, -0.5))],
+                      fontFamily: 'KHMEROSSIEMREAP'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _controller,
+                focusNode: _focusNode,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  hintText: 'បញ្ចូលឈ្មោះភ្ញៀវ',
+                  hintStyle: const TextStyle(
+                    color: AppTheme.textMuted,
+                    fontFamily: 'KHMEROSSIEMREAP',
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: AppTheme.lightLavender),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppTheme.primaryPurple.withOpacity(0.4)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: AppTheme.primaryPurple, width: 2),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                ),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.primaryPurple,
+                  fontFamily: 'KHMEROSMUOLLIGHT',
+                ),
+                onSubmitted: (_) => _copyLink(),
+              ),
+              const SizedBox(height: 50),
+              if (kIsWeb) ...[
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: _copyLink,
+                    icon: const Icon(Icons.link_rounded, size: 20),
+                    label: const Text('ចម្លងភ្ជាប់ផ្ញើជូនភ្ញៀវ'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.primaryPurple,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+              ],
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: _previewWelcome,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppTheme.primaryPurple,
+                    side: const BorderSide(color: AppTheme.primaryPurple),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'មើលមុន',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.deepPurple,
+                      fontFamily: 'KHMEROSSEAMREAP',
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.sizeOf(context);
+    final usePhoneColumn = kIsWeb || media.width > _maxContentWidth;
+
     return Scaffold(
-      body: FloralFrame(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'សិរីមង្គលអាពាហ៍ពិពាហ៍',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.deepPurple,
-                    height: 1.3,
-                    fontFamily: 'KHMEROSMUOLLIGHT',
-                  ),
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  kIsWeb
-                      ? 'វាយឈ្មោះភ្ញៀវ រួចចម្លងភ្ជាប់ផ្ញើជូន'
-                      : 'វាយឈ្មោះភ្ញៀវ',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.textMuted,
-                      fontFamily: 'KHMEROSSIEMREAP'),
-                ),
-                const SizedBox(height: 28),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'ឈ្មោះភ្ញៀវ',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.primaryPurple,
-                        shadows: [
-                          Shadow(
-                              color: AppTheme.deepPurple,
-                              offset: Offset(-0.5, -0.5))
-                        ],
-                        fontFamily: 'KHMEROSSIEMREAP'),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _controller,
-                  focusNode: _focusNode,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    hintText: 'បញ្ចូលឈ្មោះភ្ញៀវ',
-                    hintStyle: const TextStyle(
-                      color: AppTheme.textMuted,
-                      fontFamily: 'KHMEROSSIEMREAP',
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide:
-                          const BorderSide(color: AppTheme.lightLavender),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                          color: AppTheme.primaryPurple.withOpacity(0.4)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                          color: AppTheme.primaryPurple, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 20),
-                  ),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.deepPurple,
-                    fontFamily: 'KHMEROSMUOLLIGHT',
-                  ),
-                  onSubmitted: (_) => _copyLink(),
-                ),
-                const SizedBox(height: 50),
-                if (kIsWeb) ...[
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: _copyLink,
-                      icon: const Icon(Icons.link_rounded, size: 20),
-                      label: const Text('ចម្លងភ្ជាប់ផ្ញើជូនភ្ញៀវ'),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: AppTheme.deepPurple,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                ],
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: _previewWelcome,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppTheme.deepPurple,
-                      side: const BorderSide(color: AppTheme.primaryPurple),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'មើលមុន',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.deepPurple,
-                        fontFamily: 'KHMEROSSEAMREAP',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+      backgroundColor: AppTheme.backgroundCream,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (!usePhoneColumn) {
+            return _buildGuestNameContent();
+          }
+          return Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: math.min(constraints.maxWidth, _maxContentWidth),
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                height: constraints.maxHeight,
+                child: _buildGuestNameContent(),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
