@@ -3,7 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../app_theme.dart';
 import '../models/wedding_ticket.dart';
 
-/// Digital wedding ticket card: event info, guest name, QR area, valid for N guests.
 class WeddingTicketCard extends StatelessWidget {
   const WeddingTicketCard({
     super.key,
@@ -51,7 +50,7 @@ class WeddingTicketCard extends StatelessWidget {
                 _buildDashedDivider(),
                 _buildBody(context),
                 _buildDashedDivider(),
-                _buildFooter(context),
+                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -63,7 +62,11 @@ class WeddingTicketCard extends StatelessWidget {
       return content
           .animate()
           .fadeIn(duration: 500.ms)
-          .scale(begin: const Offset(0.96, 0.96), end: const Offset(1, 1), curve: Curves.easeOut);
+          .scale(
+            begin: const Offset(0.96, 0.96),
+            end: const Offset(1, 1),
+            curve: Curves.easeOut,
+          );
     }
     return content;
   }
@@ -89,16 +92,18 @@ class WeddingTicketCard extends StatelessWidget {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 18,
+              fontFamily: 'KHMEROSMUOLLIGHT',
               fontWeight: FontWeight.bold,
-              color: AppTheme.deepPurple,
+              color: AppTheme.primaryPurple,
             ),
           ),
           const SizedBox(height: 6),
           Text(
             ticket.eventDate,
             style: const TextStyle(
-              fontSize: 13,
-              color: AppTheme.textMuted,
+              fontSize: 16,
+              fontFamily: 'BattambangRegular',
+              color: AppTheme.primaryPurple,
             ),
           ),
         ],
@@ -126,9 +131,10 @@ class WeddingTicketCard extends StatelessWidget {
                 const Text(
                   'ភ្ញៀវ',
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 16,
+                    fontFamily: 'BattambangRegular',
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textMuted,
+                    color: AppTheme.primaryPurple,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -136,32 +142,23 @@ class WeddingTicketCard extends StatelessWidget {
                   ticket.guestName,
                   style: const TextStyle(
                     fontSize: 16,
+                    fontFamily: 'BattambangRegular',
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textDark,
+                    color: AppTheme.primaryPurple,
                   ),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   ticket.location,
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
+                    fontFamily: 'BattambangRegular',
                     color: AppTheme.textMuted,
                     height: 1.3,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                if (ticket.tableNumber != null) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    'តុលេខ ${ticket.tableNumber}',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: AppTheme.primaryPurple,
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
@@ -169,50 +166,13 @@ class WeddingTicketCard extends StatelessWidget {
           Container(
             width: 90,
             height: 90,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppTheme.lightLavender),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              'QR',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade600,
-                fontWeight: FontWeight.w600,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/logo_name.png'),
+                fit: BoxFit.cover,
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFooter(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppTheme.backgroundCream.withOpacity(0.8),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'សំបុត្រលេខ ${ticket.ticketId}',
-            style: const TextStyle(
-              fontSize: 11,
-              color: AppTheme.textMuted,
-            ),
-          ),
-          Text(
-            'អនុញ្ញាតសម្រាប់ ${ticket.guestsCount} នាក់',
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.primaryPurple,
-            ),
+            alignment: Alignment.center,
           ),
         ],
       ),
@@ -226,10 +186,11 @@ class _DashedLinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 1.5
-      ..style = PaintingStyle.stroke;
+    final paint =
+        Paint()
+          ..color = color
+          ..strokeWidth = 1.5
+          ..style = PaintingStyle.stroke;
     const dashWidth = 8.0;
     const gap = 6.0;
     final y = size.height / 2;

@@ -4,6 +4,7 @@ class AppTheme {
   // Invitation-style palette (lavender, purple, white)
   static const Color primaryPurple = Color(0xFF6B4E9E);
   static const Color deepPurple = Color(0xFF4A3B6B);
+  static const Color lightPurple = Color(0xFFDB5DDD);
   static const Color lavender = Color(0xFFB8A9D4);
   static const Color lightLavender = Color(0xFFE8E0F0);
   static const Color backgroundCream = Color(0xFFF8F5FC);

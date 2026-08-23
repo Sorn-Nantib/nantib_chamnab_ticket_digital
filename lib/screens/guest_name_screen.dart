@@ -7,18 +7,15 @@ import '../app_theme.dart';
 import '../widgets/floral_frame.dart';
 import 'welcome_ticket_screen.dart';
 
-/// First screen: Admin inputs guest name and copies link to send.
-/// When user opens link with ?guest=Name, they go straight to welcome with that name.
 class GuestNameScreen extends StatefulWidget {
   const GuestNameScreen({super.key});
 
   @override
   State<GuestNameScreen> createState() => _GuestNameScreenState();
 }
-
 class _GuestNameScreenState extends State<GuestNameScreen> {
   /// Matches welcome / invitation screens on web and wide layouts.
-  static const double _maxContentWidth = 430;
+  static const double _maxContentWidth = 470;
 
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
@@ -102,9 +99,9 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.deepPurple,
+                  color: AppTheme.primaryPurple,
                   height: 1.3,
-                  fontFamily: 'KHMEROSMUOLLIGHT',
+                  fontFamily: 'MoulRegular',
                 ),
               ),
               const SizedBox(height: 20),
@@ -114,7 +111,8 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppTheme.textMuted,
+                     height: 1.3,
+                    color: AppTheme.primaryPurple,
                     fontFamily: 'KHMEROSSIEMREAP'),
               ),
               const SizedBox(height: 100),
@@ -127,7 +125,7 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                       fontWeight: FontWeight.w600,
                       color: AppTheme.primaryPurple,
                       shadows: [Shadow(color: AppTheme.deepPurple, offset: Offset(-0.5, -0.5))],
-                      fontFamily: 'KHMEROSSIEMREAP'),
+                      fontFamily: 'KHMEROSMUOLLIGHT'),
                 ),
               ),
               const SizedBox(height: 12),
@@ -197,17 +195,17 @@ class _GuestNameScreenState extends State<GuestNameScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'មើលមុន',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.deepPurple,
-                      fontFamily: 'KHMEROSSEAMREAP',
+                    child: const Text(
+                      'មើលមុន',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.deepPurple,
+                        fontFamily: 'KHMEROSSIEMREAP',
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),
